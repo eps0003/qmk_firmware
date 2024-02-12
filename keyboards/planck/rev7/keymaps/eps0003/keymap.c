@@ -1,15 +1,16 @@
 #include QMK_KEYBOARD_H
 
-enum layers { DEF, NUM, NAV, SCR, TXT, SYM, ADJ };
+enum layers { DEF, NUM, MSE, SCR, TXT, ADJ };
 
 enum tap_dance { TD_PLAY_NEXT, TD_MUTE_PREV };
 
 // layers
-#define LA_NUM MO(NUM)
-#define LA_NAV MO(NAV)
+#define LA_NUML LT(NUM, KC_TAB)
+#define LA_NUMR LT(NUM, KC_ENT)
+#define LA_MSE LT(MSE, KC_BSPC)
+#define LA_MSE2 LT(MSE, KC_DEL)
+#define LA_TXT LT(TXT, KC_SPC)
 #define LA_SCR MO(SCR)
-#define LA_TXT MO(TXT)
-#define LA_SYM MO(SYM)
 #define LA_ADJ MO(ADJ)
 
 // home row mods
@@ -38,8 +39,8 @@ enum tap_dance { TD_PLAY_NEXT, TD_MUTE_PREV };
 #define KC_MRGT TD(TD_PLAY_NEXT)
 
 // shortcuts
-#define TAB_L G(S(KC_LEFT))
-#define TAB_R G(S(KC_RIGHT))
+#define SCR_TOP C(KC_HOME)
+#define SCR_BOT C(KC_END)
 
 /* clang-format off */
 tap_dance_action_t tap_dance_actions[] = {
@@ -53,42 +54,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  MOD_A,   MOD_S,   MOD_D,   MOD_F,   KC_G,    KC_H,    MOD_J,   MOD_K,   MOD_L,   MOD_SCL, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-        KC_LCTL, KC_LGUI, KC_LALT, LA_SYM,  LA_NUM,  KC_SPC,  KC_BSPC, LA_NAV,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+        KC_LCTL, KC_LGUI, KC_LALT, KC_ESC,  LA_TXT,  LA_NUML, LA_NUMR, LA_MSE,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
     ),
 
     [NUM] = LAYOUT_planck_grid(
         KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-        KC_GRV,  MOD_1,   MOD_2,   MOD_3,   MOD_4,   KC_5,    KC_6,    MOD_7,   MOD_8,   MOD_9,   MOD_0,   XXXXXXX,
+        KC_GRV,  MOD_1,   MOD_2,   MOD_3,   MOD_4,   KC_5,    KC_6,    MOD_7,   MOD_8,   MOD_9,   MOD_0,   KC_BSLS,
         KC_CAPS, KC_LABK, KC_LBRC, KC_LCBR, KC_LPRN, KC_MINS, KC_EQL,  KC_RPRN, KC_RCBR, KC_RBRC, KC_RABK, _______,
-        _______, _______, _______, _______, _______, _______, KC_DEL,  _______, KC_MLFT, KC_VOLD, KC_VOLU, KC_MRGT
+        _______, _______, _______, _______, _______, _______, _______, _______, KC_MRWD, KC_VOLD, KC_VOLU, KC_MFFD
     ),
 
-    [NAV] = LAYOUT_planck_grid(
-        _______, _______, KC_BTN4, KC_MS_U, KC_BTN5, _______, _______, _______, _______, _______, _______, _______,
-        _______, LA_TXT,  KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_BTN1, KC_BTN2, KC_BTN3, LA_SCR,  _______,
-        _______, _______, _______, TAB_L,   TAB_R,   _______, _______, _______, _______, _______, _______, _______,
+    [MSE] = LAYOUT_planck_grid(
+        XXXXXXX, XXXXXXX, KC_BTN4, KC_MS_U, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX, XXXXXXX, KC_BTN1, KC_BTN2, KC_BTN3, LA_SCR,  XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [SCR] = LAYOUT_planck_grid(
-        _______, _______, _______, KC_WH_U, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, KC_WH_L, KC_WH_D, KC_WH_R, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        XXXXXXX, XXXXXXX, SCR_TOP, KC_WH_U, SCR_BOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_R, XXXXXXX, XXXXXXX, KC_BTN1, KC_BTN2, KC_BTN3, LA_SCR,  XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [TXT] = LAYOUT_planck_grid(
-        _______, _______, KC_HOME, KC_UP,   KC_END,  _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-    ),
-
-    [SYM] = LAYOUT_planck_grid(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_DEL,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LBRC, KC_RBRC, KC_BSLS,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_UP,   KC_END,  XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        _______, _______, _______, _______, _______, _______, _______, LA_MSE2, KC_MLFT, KC_VOLD, KC_VOLU, KC_MRGT
     ),
 
     /* Adjust (Lower + Raise)
@@ -114,5 +108,5 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* clang-format on */
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, NUM, NAV, ADJ);
+    return update_tri_layer_state(state, TXT, MSE, ADJ);
 }
