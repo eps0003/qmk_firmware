@@ -2,8 +2,6 @@
 
 enum layers { DEF, NUM, MSE, SCR, TXT, ADJ };
 
-enum tap_dance { TD_PLAY_NEXT, TD_MUTE_PREV };
-
 // layers
 #define LA_NUML LT(NUM, KC_TAB)
 #define LA_NUMR LT(NUM, KC_ENT)
@@ -11,7 +9,6 @@ enum tap_dance { TD_PLAY_NEXT, TD_MUTE_PREV };
 #define LA_MSE2 LT(MSE, KC_DEL)
 #define LA_TXT LT(TXT, KC_SPC)
 #define LA_SCR MO(SCR)
-#define LA_ADJ MO(ADJ)
 
 // home row mods
 #define MOD_A LGUI_T(KC_A)
@@ -34,20 +31,11 @@ enum tap_dance { TD_PLAY_NEXT, TD_MUTE_PREV };
 #define MOD_9 RALT_T(KC_9)
 #define MOD_0 RGUI_T(KC_0)
 
-// media keys
-#define KC_MLFT TD(TD_MUTE_PREV)
-#define KC_MRGT TD(TD_PLAY_NEXT)
-
 // shortcuts
 #define SCR_TOP C(KC_HOME)
 #define SCR_BOT C(KC_END)
 
 /* clang-format off */
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_PLAY_NEXT] = ACTION_TAP_DANCE_DOUBLE(KC_MPLY, KC_MNXT),
-    [TD_MUTE_PREV] = ACTION_TAP_DANCE_DOUBLE(KC_MUTE, KC_MPRV)
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [DEF] = LAYOUT_planck_grid(
@@ -61,13 +49,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
         KC_GRV,  MOD_1,   MOD_2,   MOD_3,   MOD_4,   KC_5,    KC_6,    MOD_7,   MOD_8,   MOD_9,   MOD_0,   KC_BSLS,
         KC_CAPS, KC_LABK, KC_LBRC, KC_LCBR, KC_LPRN, KC_MINS, KC_EQL,  KC_RPRN, KC_RCBR, KC_RBRC, KC_RABK, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, KC_MRWD, KC_VOLD, KC_VOLU, KC_MFFD
+        _______, _______, _______, _______, _______, _______, _______, _______, KC_MPRV, KC_MRWD, KC_MFFD, KC_MNXT
     ),
 
     [MSE] = LAYOUT_planck_grid(
-        XXXXXXX, XXXXXXX, KC_BTN4, KC_MS_U, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, KC_MS_U, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX, XXXXXXX, KC_BTN1, KC_BTN2, KC_BTN3, LA_SCR,  XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -81,8 +69,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [TXT] = LAYOUT_planck_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_UP,   KC_END,  XXXXXXX, XXXXXXX,
         XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        _______, _______, _______, _______, _______, _______, _______, LA_MSE2, KC_MLFT, KC_VOLD, KC_VOLU, KC_MRGT
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGUP, KC_PGDN, KC_INS,  XXXXXXX, XXXXXXX,
+        _______, _______, _______, _______, _______, _______, _______, LA_MSE2, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
     ),
 
     /* Adjust (Lower + Raise)

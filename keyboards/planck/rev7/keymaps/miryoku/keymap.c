@@ -22,8 +22,6 @@ enum layers { BSE, NAV, MSE, BTN, MED, NUM, SYM, FUN };
 #define MOD_SCL RGUI_T(KC_SCLN)
 
 // shortcuts
-#define TAB_L G(S(KC_LEFT))
-#define TAB_R G(S(KC_RIGHT))
 #define COPY C(KC_C)
 #define CUT C(KC_X)
 #define PASTE C(KC_V)
