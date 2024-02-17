@@ -2,14 +2,14 @@
 
 enum layers { DEF, NUM, TXT, MSE, SCR };
 
-// layers
+// Layers
 #define LA_NUML LT(NUM, KC_SPC)
 #define LA_NUMR LT(NUM, KC_BSPC)
 #define LA_MSE LT(MSE, KC_DEL)
 #define LA_TXT LT(TXT, KC_TAB)
 #define LA_SCR MO(SCR)
 
-// mod-tap keys
+// Mod-Tap keys
 #define MOD_A LGUI_T(KC_A)
 #define MOD_S LALT_T(KC_S)
 #define MOD_D LCTL_T(KC_D)
@@ -32,7 +32,7 @@ enum layers { DEF, NUM, TXT, MSE, SCR };
 
 #define MOD_SFT LSFT_T(KC_CAPS)
 
-// shortcuts
+// Shortcuts
 #define SCR_TOP C(KC_HOME)
 #define SCR_BOT C(KC_END)
 
@@ -91,8 +91,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 /* clang-format on */
 
+bool is_mod_tap_key(uint16_t keycode) {
+    return keycode & QK_MOD_TAP;
+}
+
 bool is_shift_active(void) {
-    return keyboard_report->mods & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT));
+    return get_mods() & MOD_MASK_SHIFT;
+}
+
+bool is_shift_key(uint16_t keycode) {
+    return keycode == KC_LSFT || keycode == KC_RSFT;
+}
+
+bool is_shift_pressed(uint16_t keycode, keyrecord_t *record) {
+    return (is_shift_key(keycode) || (is_mod_tap_key(keycode) && QK_MOD_TAP_GET_MODS(keycode) & MOD_MASK_SHIFT)) && record->event.pressed && record->tap.count == 0;
 }
 
 bool is_caps_lock_active(void) {
@@ -101,8 +113,13 @@ bool is_caps_lock_active(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Disable caps lock if shift is pressed
-    if (is_shift_active() && is_caps_lock_active()) {
+    if (is_shift_pressed(keycode, record) && is_caps_lock_active()) {
         tap_code(KC_CAPS);
+    }
+
+    // Stay uppercase when caps lock and shift are active
+    if (is_caps_lock_active() && is_shift_active()) {
+        unregister_mods(MOD_MASK_SHIFT);
     }
 
     return true;
