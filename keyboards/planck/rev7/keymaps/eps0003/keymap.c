@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "print.h"
 
 enum layers { DEF, NUM, TXT, MSE, SCR };
 
@@ -112,6 +113,10 @@ bool is_caps_lock_active(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef CONSOLE_ENABLE
+    uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+#endif
+
     // Disable caps lock if shift is pressed
     if (is_shift_pressed(keycode, record) && is_caps_lock_active()) {
         tap_code(KC_CAPS);
