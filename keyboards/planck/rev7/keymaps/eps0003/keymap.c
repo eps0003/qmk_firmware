@@ -139,3 +139,12 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
 }
+
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MOD_SFT:
+            return 0;
+        default:
+            return QUICK_TAP_TERM;
+    }
+}
