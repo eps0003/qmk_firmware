@@ -112,6 +112,10 @@ bool is_caps_lock_active(void) {
     return host_keyboard_led_state().caps_lock;
 }
 
+bool is_alpha_key(uint16_t keycode) {
+    return keycode >= KC_A && keycode <= KC_Z;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
@@ -123,7 +127,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     // Stay uppercase when caps lock and shift are active
-    if (is_caps_lock_active() && is_shift_active()) {
+    if (is_caps_lock_active() && is_shift_active() && is_alpha_key(keycode)) {
         unregister_mods(MOD_MASK_SHIFT);
     }
 
