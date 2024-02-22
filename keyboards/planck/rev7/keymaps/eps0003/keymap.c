@@ -138,6 +138,8 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         // Hold shift if used quickly
         case MOD_SFT:
+        case LA_TXT:
+        case LA_MSE:
             return true;
         default:
             return false;
@@ -147,8 +149,28 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MOD_SFT:
+        case LA_TXT:
+        case LA_MSE:
+        case LA_NUML:
+        case LA_NUMR:
             return 0;
         default:
             return QUICK_TAP_TERM;
+    }
+}
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    uint8_t col = record->event.key.col;
+    if (record->event.key.row < MATRIX_ROWS / 2) {
+        col = MATRIX_COLS - col - 1;
+    }
+
+    switch (keycode) {
+        case LA_NUML:
+        case LA_NUMR:
+            return 1000;
+        default:
+            // Increase tapping term for weaker fingers
+            return TAPPING_TERM + MAX(0, 25 * (col - 1));
     }
 }
