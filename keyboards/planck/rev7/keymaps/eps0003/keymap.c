@@ -1,15 +1,11 @@
 #include QMK_KEYBOARD_H
+
 #include "print.h"
-
-enum layers { DEF, TXT, MSE, NUM };
-
-enum keycodes {
-    KC_DDS = SAFE_RANGE, // KC_DOT_DOT_SLASH
-};
+#include "oneshot.h"
 
 // Layers
-#define LA_MSE LT(MSE, KC_DEL)
-#define LA_TXT LT(TXT, KC_TAB)
+#define LA_NUM MO(NUM)
+#define LA_NAV MO(NAV)
 
 // Mod-Tap keys
 #define MOD_A LGUI_T(KC_A)
@@ -36,17 +32,31 @@ enum keycodes {
 #define SCR_TOP C(KC_HOME)
 #define SCR_BOT C(KC_END)
 
+#define KC_BTAB S(KC_TAB)
+
 #define TAB_NXT C(KC_PGDN)
 #define TAB_PRV C(KC_PGUP)
 #define TAB_1 C(KC_1)
 
+enum layers { DEF, NUM, NAV };
+
+enum keycodes {
+    // Custom oneshot mod implementation with no timers.
+    OS_SHFT = SAFE_RANGE,
+    OS_CTRL,
+    OS_ALT,
+    OS_CMD,
+};
+
 const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
+const key_override_t space_key_override  = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, KC_UNDS);
 const key_override_t next_track_override = ko_make_with_layers_negmods_and_options(MOD_MASK_CTRL, KC_MPLY, KC_MNXT, ~0, MOD_MASK_SA, ko_option_no_reregister_trigger);
 const key_override_t prev_track_override = ko_make_with_layers_negmods_and_options(MOD_MASK_CS, KC_MPLY, KC_MPRV, ~0, MOD_MASK_ALT, ko_option_no_reregister_trigger);
 
 /* clang-format off */
 const key_override_t **key_overrides = (const key_override_t *[]){
     &delete_key_override,
+    &space_key_override,
     &next_track_override,
     &prev_track_override,
     NULL
@@ -58,101 +68,78 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  MOD_A,   MOD_S,   MOD_D,   MOD_F,   KC_G,    KC_H,    MOD_J,   MOD_K,   MOD_L,   MOD_SCL, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-        KC_LCTL, KC_LGUI, KC_LALT, KC_ENT,  LA_TXT,  KC_SPC,  KC_BSPC, LA_MSE,  KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
+        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
     ),
 
     [NUM] = LAYOUT_planck_grid(
-        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-        KC_GRV,  MOD_1,   MOD_2,   MOD_3,   MOD_4,   KC_5,    KC_6,    MOD_7,   MOD_8,   MOD_9,   MOD_0,   KC_BSLS,
-        KC_CAPS, KC_LABK, KC_LBRC, KC_LCBR, KC_LPRN, KC_MINS, KC_EQL,  KC_RPRN, KC_RCBR, KC_RBRC, KC_RABK, KC_ENT,
-        _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______
+        KC_TAB,  KC_BSLS, KC_1,    KC_2,    KC_3,    KC_SLSH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
+        KC_ESC,  KC_LBRC, KC_4,    KC_5,    KC_6,    KC_RBRC, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
+        CW_TOGG, KC_GRV,  KC_7,    KC_8,    KC_9,    KC_0,    XXXXXXX, KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+        _______, _______, _______, _______, KC_EQL,  KC_MINS, _______, _______, _______, _______, _______, _______
     ),
 
-    [MSE] = LAYOUT_planck_grid(
-        QK_BOOT, XXXXXXX, XXXXXXX, KC_MS_U, KC_WH_U, SCR_TOP, XXXXXXX, TAB_PRV, TAB_1,   TAB_NXT, XXXXXXX, XXXXXXX,
-        KC_ESC,  KC_WH_L, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_R, XXXXXXX, KC_BTN1, KC_BTN3, KC_BTN2, KC_BTN5, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_D, SCR_BOT, XXXXXXX, KC_BTN4, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-    ),
-
-    [TXT] = LAYOUT_planck_grid(
-        QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGUP, KC_UP,   KC_INS,  KC_PSCR, KC_BSPC,
-        KC_ESC,  KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,  XXXXXXX,
-        KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    [NAV] = LAYOUT_planck_grid(
+        KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, KC_PGUP, KC_BTAB, KC_UP,   KC_TAB,  KC_INS,  KC_BSPC,
+        KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, KC_PSCR,
+        CW_TOGG, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX, KC_END,  XXXXXXX, KC_ENT,
+        _______, _______, _______, _______, _______, _______, KC_ENT,  KC_ESC,  _______, _______, _______, _______
     ),
 
 };
 /* clang-format on */
 
-bool is_mod_tap_key(uint16_t keycode) {
-    return keycode & QK_MOD_TAP;
-}
-
-bool is_shift_active(void) {
-    return get_mods() & MOD_MASK_SHIFT;
-}
-
-bool is_shift_key(uint16_t keycode) {
-    return keycode == KC_LSFT || keycode == KC_RSFT;
-}
-
-bool is_shift_pressed(uint16_t keycode, keyrecord_t *record) {
-    return (is_shift_key(keycode) || (is_mod_tap_key(keycode) && QK_MOD_TAP_GET_MODS(keycode) & MOD_MASK_SHIFT)) && record->event.pressed && record->tap.count == 0;
-}
-
-bool is_caps_lock_active(void) {
-    return host_keyboard_led_state().caps_lock;
-}
-
-bool is_alpha_key(uint16_t keycode) {
-    return keycode >= KC_A && keycode <= KC_Z;
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-#ifdef CONSOLE_ENABLE
-    uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
-#endif
-
-    // // Disable caps lock if shift is pressed
-    // if (is_shift_pressed(keycode, record) && is_caps_lock_active()) {
-    //     tap_code(KC_CAPS);
-    // }
-
-    // Stay uppercase when caps lock and shift are active
-    if (is_caps_lock_active() && is_shift_active() && is_alpha_key(keycode)) {
-        unregister_mods(MOD_MASK_SHIFT);
-    }
-
+bool is_oneshot_cancel_key(uint16_t keycode) {
     switch (keycode) {
-        case KC_DDS:
-            if (record->event.pressed) {
-                SEND_STRING("../");
-            }
-            break;
-    }
-
-    return true;
-}
-
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case LA_TXT:
-        case LA_MSE:
+        case LA_NAV:
+        case LA_NUM:
             return true;
         default:
             return false;
     }
 }
 
-uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+bool is_oneshot_ignored_key(uint16_t keycode) {
     switch (keycode) {
-        case LA_TXT:
-        case LA_MSE:
-            return 0;
+        // Layers
+        case LA_NAV:
+        case LA_NUM:
+        // Left modifiers
+        case KC_LSFT:
+        case KC_LCTL:
+        case KC_LALT:
+        case KC_LCMD:
+        // Right modifiers
+        case KC_RSFT:
+        case KC_RCTL:
+        case KC_RALT:
+        case KC_RCMD:
+        // One-shot modifiers
+        case OS_SHFT:
+        case OS_CTRL:
+        case OS_ALT:
+        case OS_CMD:
+            return true;
         default:
-            return QUICK_TAP_TERM;
+            return false;
     }
+}
+
+oneshot_state os_shft_state = os_up_unqueued;
+oneshot_state os_ctrl_state = os_up_unqueued;
+oneshot_state os_alt_state  = os_up_unqueued;
+oneshot_state os_cmd_state  = os_up_unqueued;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef CONSOLE_ENABLE
+    uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+#endif
+
+    update_oneshot(&os_shft_state, KC_LSFT, OS_SHFT, keycode, record);
+    update_oneshot(&os_ctrl_state, KC_LCTL, OS_CTRL, keycode, record);
+    update_oneshot(&os_alt_state, KC_LALT, OS_ALT, keycode, record);
+    update_oneshot(&os_cmd_state, KC_LCMD, OS_CMD, keycode, record);
+
+    return true;
 }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -162,8 +149,4 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 
     return TAPPING_TERM + MAX(0, 25 * (col - 1));
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, TXT, MSE, NUM);
 }
