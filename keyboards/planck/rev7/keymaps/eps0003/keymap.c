@@ -6,6 +6,7 @@
 // Layers
 #define LA_NUM MO(NUM)
 #define LA_NAV MO(NAV)
+#define LA_FUN MO(FUN)
 
 // Mod-Tap keys
 #define MOD_A LGUI_T(KC_A)
@@ -38,7 +39,7 @@
 #define TAB_PRV C(KC_PGUP)
 #define TAB_1 C(KC_1)
 
-enum layers { DEF, NUM, NAV };
+enum layers { DEF, NUM, NAV, FUN };
 
 enum keycodes {
     // Custom oneshot mod implementation with no timers.
@@ -50,15 +51,11 @@ enum keycodes {
 
 const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
 const key_override_t space_key_override  = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, KC_UNDS);
-const key_override_t next_track_override = ko_make_with_layers_negmods_and_options(MOD_MASK_CTRL, KC_MPLY, KC_MNXT, ~0, MOD_MASK_SA, ko_option_no_reregister_trigger);
-const key_override_t prev_track_override = ko_make_with_layers_negmods_and_options(MOD_MASK_CS, KC_MPLY, KC_MPRV, ~0, MOD_MASK_ALT, ko_option_no_reregister_trigger);
 
 /* clang-format off */
 const key_override_t **key_overrides = (const key_override_t *[]){
     &delete_key_override,
     &space_key_override,
-    &next_track_override,
-    &prev_track_override,
     NULL
 };
 
@@ -68,14 +65,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  MOD_A,   MOD_S,   MOD_D,   MOD_F,   KC_G,    KC_H,    MOD_J,   MOD_K,   MOD_L,   MOD_SCL, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
+        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  XXXXXXX, XXXXXXX, XXXXXXX
     ),
 
     [NUM] = LAYOUT_planck_grid(
         KC_TAB,  KC_BSLS, KC_1,    KC_2,    KC_3,    KC_SLSH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
         KC_ESC,  KC_LBRC, KC_4,    KC_5,    KC_6,    KC_RBRC, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
-        CW_TOGG, KC_GRV,  KC_7,    KC_8,    KC_9,    KC_0,    XXXXXXX, KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
-        _______, _______, _______, _______, KC_EQL,  KC_MINS, _______, _______, _______, _______, _______, _______
+        CW_TOGG, KC_GRV,  KC_7,    KC_8,    KC_9,    KC_EQL,  XXXXXXX, KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+        _______, _______, _______, _______, KC_0,    KC_MINS, _______, _______, _______, _______, _______, _______
+    ),
+
+    [FUN] = LAYOUT_planck_grid(
+        KC_TAB,  KC_F10,  KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
+        KC_ESC,  KC_F11,  KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
+        CW_TOGG, KC_F12,  KC_F7,   KC_F8,   KC_F9,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [NAV] = LAYOUT_planck_grid(
@@ -90,8 +94,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool is_oneshot_cancel_key(uint16_t keycode) {
     switch (keycode) {
-        case LA_NAV:
         case LA_NUM:
+        case LA_NAV:
+        case LA_FUN:
             return true;
         default:
             return false;
@@ -101,8 +106,9 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 bool is_oneshot_ignored_key(uint16_t keycode) {
     switch (keycode) {
         // Layers
-        case LA_NAV:
         case LA_NUM:
+        case LA_NAV:
+        case LA_FUN:
         // Left modifiers
         case KC_LSFT:
         case KC_LCTL:
@@ -148,5 +154,15 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         col = MATRIX_COLS - col - 1;
     }
 
-    return TAPPING_TERM + MAX(0, 25 * (col - 1));
+    return TAPPING_TERM + MAX(0, 25 * (col - 2));
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MOD_A:
+        case MOD_SCL:
+            return false;
+        default:
+            return true;
+    }
 }
