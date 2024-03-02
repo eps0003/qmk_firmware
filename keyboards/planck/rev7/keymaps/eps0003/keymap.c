@@ -9,25 +9,25 @@
 #define LA_FUN MO(FUN)
 
 // Mod-Tap keys
-#define MOD_A LGUI_T(KC_A)
-#define MOD_S LALT_T(KC_S)
-#define MOD_D LCTL_T(KC_D)
-#define MOD_F LSFT_T(KC_F)
+#define MT_A LGUI_T(KC_A)
+#define MT_R LALT_T(KC_R)
+#define MT_S LCTL_T(KC_S)
+#define MT_T LSFT_T(KC_T)
 
-#define MOD_J RSFT_T(KC_J)
-#define MOD_K RCTL_T(KC_K)
-#define MOD_L RALT_T(KC_L)
-#define MOD_SCL RGUI_T(KC_SCLN)
+#define MT_N RSFT_T(KC_N)
+#define MT_E RCTL_T(KC_E)
+#define MT_I RALT_T(KC_I)
+#define MT_O RGUI_T(KC_O)
 
-#define MOD_1 LGUI_T(KC_1)
-#define MOD_2 LALT_T(KC_2)
-#define MOD_3 LCTL_T(KC_3)
-#define MOD_4 LSFT_T(KC_4)
+#define MT_EXLM LGUI_T(KC_EXLM)
+#define MT_MINS LALT_T(KC_MINS)
+#define MT_PLUS LCTL_T(KC_PLUS)
+#define MT_EQL LSFT_T(KC_EQL)
 
-#define MOD_7 RSFT_T(KC_7)
-#define MOD_8 RCTL_T(KC_8)
-#define MOD_9 RALT_T(KC_9)
-#define MOD_0 RGUI_T(KC_0)
+#define MT_AMPR RSFT_T(KC_AMPR)
+#define MT_LPRN RCTL_T(KC_LPRN)
+#define MT_RPRN RALT_T(KC_RPRN)
+#define MT_QUES RGUI_T(KC_QUES)
 
 // Shortcuts
 #define SCR_TOP C(KC_HOME)
@@ -39,7 +39,7 @@
 #define TAB_PRV C(KC_PGUP)
 #define TAB_1 C(KC_1)
 
-enum layers { DEF, NUM, NAV, FUN };
+enum layers { DEF, NUM, FUN, NAV, SYM };
 
 enum keycodes {
     // Custom oneshot mod implementation with no timers.
@@ -62,31 +62,38 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [DEF] = LAYOUT_planck_grid(
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-        KC_ESC,  MOD_A,   MOD_S,   MOD_D,   MOD_F,   KC_G,    KC_H,    MOD_J,   MOD_K,   MOD_L,   MOD_SCL, KC_QUOT,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
+        KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
+        KC_ESC,  MT_A,    MT_R,    MT_S,    MT_T,    KC_G,    KC_M,    MT_N,    MT_E,    MT_I,    MT_O,    KC_QUOT,
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
         KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  XXXXXXX, XXXXXXX, XXXXXXX
     ),
 
     [NUM] = LAYOUT_planck_grid(
-        KC_TAB,  KC_BSLS, KC_1,    KC_2,    KC_3,    KC_SLSH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
-        KC_ESC,  KC_LBRC, KC_4,    KC_5,    KC_6,    KC_RBRC, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
-        CW_TOGG, KC_GRV,  KC_7,    KC_8,    KC_9,    KC_EQL,  XXXXXXX, KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
-        _______, _______, _______, _______, KC_0,    KC_MINS, _______, _______, _______, _______, _______, _______
+        KC_TAB,  XXXXXXX, KC_1,    KC_2,    KC_3,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
+        KC_ESC,  XXXXXXX, KC_4,    KC_5,    KC_6,    XXXXXXX, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
+        CW_TOGG, XXXXXXX, KC_7,    KC_8,    KC_9,    XXXXXXX, XXXXXXX, KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+        _______, _______, _______, _______, _______, KC_0,    _______, _______, _______, _______, _______, _______
     ),
 
     [FUN] = LAYOUT_planck_grid(
         KC_TAB,  KC_F10,  KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
         KC_ESC,  KC_F11,  KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
         CW_TOGG, KC_F12,  KC_F7,   KC_F8,   KC_F9,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+        _______, _______, _______, _______, _______, KC_MINS, _______, _______, _______, _______, _______, _______
     ),
 
     [NAV] = LAYOUT_planck_grid(
         KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, KC_PGUP, KC_BTAB, KC_UP,   KC_TAB,  KC_INS,  KC_BSPC,
         KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, KC_PSCR,
         CW_TOGG, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX, KC_END,  XXXXXXX, KC_ENT,
-        _______, _______, _______, _______, _______, _______, KC_ENT,  KC_ESC,  _______, _______, _______, _______
+        _______, _______, _______, _______, _______, _______, KC_ENT,  _______, KC_ESC,  _______, _______, _______
+    ),
+
+    [SYM] = LAYOUT_planck_grid(
+        KC_TAB,  XXXXXXX, KC_LABK, KC_RABK, KC_HASH, XXXXXXX, KC_CIRC, KC_PIPE, KC_LBRC, KC_RBRC, XXXXXXX, KC_BSPC,
+        KC_ESC,  MT_EXLM, MT_MINS, MT_PLUS, MT_EQL,  KC_PERC, KC_GRV,  MT_AMPR, MT_LPRN, MT_RPRN, MT_QUES, XXXXXXX,
+        CW_TOGG, XXXXXXX, KC_SLSH, KC_ASTR, KC_BSLS, KC_AT,   KC_TILD, KC_DLR,  KC_LCBR, KC_RCBR, XXXXXXX, KC_ENT,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
 };
@@ -145,6 +152,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_oneshot(&os_alt_state, KC_LALT, OS_ALT, keycode, record);
     update_oneshot(&os_cmd_state, KC_LCMD, OS_CMD, keycode, record);
 
+    if (record->tap.count && record->event.pressed) {
+        switch (keycode) {
+            case MT_EXLM:
+                tap_code16(KC_EXLM);
+                return false;
+            case MT_PLUS:
+                tap_code16(KC_PLUS);
+                return false;
+            case MT_AMPR:
+                tap_code16(KC_AMPR);
+                return false;
+            case MT_LPRN:
+                tap_code16(KC_LPRN);
+                return false;
+            case MT_RPRN:
+                tap_code16(KC_RPRN);
+                return false;
+            case MT_QUES:
+                tap_code16(KC_QUES);
+                return false;
+        }
+    }
+
     return true;
 }
 
@@ -159,10 +189,16 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case MOD_A:
-        case MOD_SCL:
+        case MT_A:
+        case MT_O:
+        case MT_EXLM:
+        case MT_QUES:
             return false;
         default:
             return true;
     }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    return update_tri_layer_state(state, NAV, NUM, SYM);
 }
