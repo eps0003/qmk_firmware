@@ -4,11 +4,12 @@
 #include "oneshot.h"
 
 // Layers
+#define LA_QWE TG(QWE)
 #define LA_NUM MO(NUM)
 #define LA_NAV MO(NAV)
 #define LA_FUN MO(FUN)
 
-// Mod-Tap keys
+// Colemak-DH Mod-Tap keys
 #define MT_A LGUI_T(KC_A)
 #define MT_R LALT_T(KC_R)
 #define MT_S LCTL_T(KC_S)
@@ -19,6 +20,18 @@
 #define MT_I RALT_T(KC_I)
 #define MT_O RGUI_T(KC_O)
 
+// QWERTY Mod-Tap keys
+#define MT_A LGUI_T(KC_A)
+#define MT_S2 LALT_T(KC_S)
+#define MT_D LCTL_T(KC_D)
+#define MT_F LSFT_T(KC_F)
+
+#define MT_J RSFT_T(KC_J)
+#define MT_K RCTL_T(KC_K)
+#define MT_L RALT_T(KC_L)
+#define MT_SCL RGUI_T(KC_SCLN)
+
+// Symbols Mod-Tap keys
 #define MT_EXLM LGUI_T(KC_EXLM)
 #define MT_MINS LALT_T(KC_MINS)
 #define MT_PLUS LCTL_T(KC_PLUS)
@@ -29,7 +42,7 @@
 #define MT_RPRN RALT_T(KC_RPRN)
 #define MT_QUES RGUI_T(KC_QUES)
 
-// Shortcuts
+// Shortcut keys
 #define SCR_TOP C(KC_HOME)
 #define SCR_BOT C(KC_END)
 
@@ -39,7 +52,7 @@
 #define TAB_PRV C(KC_PGUP)
 #define TAB_1 C(KC_1)
 
-enum layers { DEF, NUM, FUN, NAV, SYM };
+enum layers { COL, QWE, NUM, FUN, NAV, SYM };
 
 enum keycodes {
     // Custom oneshot mod implementation with no timers.
@@ -61,11 +74,18 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-    [DEF] = LAYOUT_planck_grid(
+    [COL] = LAYOUT_planck_grid(
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
         KC_ESC,  MT_A,    MT_R,    MT_S,    MT_T,    KC_G,    KC_M,    MT_N,    MT_E,    MT_I,    MT_O,    KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  XXXXXXX, XXXXXXX, XXXXXXX
+        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  XXXXXXX, LA_QWE,  XXXXXXX
+    ),
+
+    [QWE] = LAYOUT_planck_grid(
+        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
+        _______, MT_A,    MT_S2,   MT_D,    MT_F,    KC_G,    KC_H,    MT_J,    MT_K,    MT_L,    MT_SCL,  KC_QUOT,
+        _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [NUM] = LAYOUT_planck_grid(
@@ -83,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [NAV] = LAYOUT_planck_grid(
-        KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, KC_PGUP, KC_BTAB, KC_UP,   KC_TAB,  KC_INS,  KC_BSPC,
+        KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, KC_PGUP, KC_BTAB, KC_UP,   KC_TAB,  KC_INS,  KC_DEL,
         KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, KC_PSCR,
         CW_TOGG, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX, KC_END,  XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, KC_ENT,  _______, KC_ESC,  _______, _______, _______
@@ -101,8 +121,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool is_oneshot_cancel_key(uint16_t keycode) {
     switch (keycode) {
-        case LA_NUM:
-        case LA_NAV:
         case LA_FUN:
             return true;
         default:
