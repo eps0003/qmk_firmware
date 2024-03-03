@@ -172,27 +172,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_oneshot(&os_alt_state, KC_LALT, OS_ALT, keycode, record);
     update_oneshot(&os_cmd_state, KC_LCMD, OS_CMD, keycode, record);
 
-    if (record->tap.count && record->event.pressed) {
-        switch (keycode) {
-            case MT_EXLM:
-                tap_code16(KC_EXLM);
-                return false;
-            case MT_PLUS:
-                tap_code16(KC_PLUS);
-                return false;
-            case MT_AMPR:
-                tap_code16(KC_AMPR);
-                return false;
-            case MT_LPRN:
-                tap_code16(KC_LPRN);
-                return false;
-            case MT_RPRN:
-                tap_code16(KC_RPRN);
-                return false;
-            case MT_QUES:
-                tap_code16(KC_QUES);
-                return false;
+    uint16_t kc = KC_NO;
+    switch (keycode) {
+        case MT_EXLM:
+            kc = KC_EXLM;
+            break;
+        case MT_PLUS:
+            kc = KC_PLUS;
+            break;
+        case MT_AMPR:
+            kc = KC_AMPR;
+            break;
+        case MT_LPRN:
+            kc = KC_LPRN;
+            break;
+        case MT_RPRN:
+            kc = KC_RPRN;
+            break;
+        case MT_QUES:
+            kc = KC_QUES;
+            break;
+    }
+
+    if (record->tap.count && kc) {
+        if (record->event.pressed) {
+            register_code16(kc);
+        } else {
+            unregister_code16(kc);
         }
+        return false;
     }
 
     return true;
