@@ -26,8 +26,8 @@ void update_oneshot(oneshot_state *state, uint16_t mod, uint16_t trigger, uint16
         }
     } else {
         if (record->event.pressed) {
-            if (is_oneshot_cancel_key(keycode) && *state != os_up_unqueued) {
-                // Cancel oneshot on designated cancel keydown.
+            if (is_oneshot_cancel_key(keycode) && *state == os_up_queued) {
+                // If oneshot is queued, cancel it on designated cancel keydown.
                 *state = os_up_unqueued;
                 unregister_code(mod);
             }
