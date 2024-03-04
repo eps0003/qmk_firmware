@@ -60,6 +60,9 @@ enum keycodes {
     OS_CTRL,
     OS_ALT,
     OS_CMD,
+
+    // Macros
+    KC_DDS, // KC_DOT_DOT_SLASH
 };
 
 const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
@@ -87,30 +90,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [NUM] = LAYOUT_planck_grid(
-        KC_TAB,  XXXXXXX, KC_1,    KC_2,    KC_3,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
-        KC_ESC,  KC_0,    KC_4,    KC_5,    KC_6,    KC_0,    XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
+        KC_TAB,  XXXXXXX, KC_4,    KC_5,    KC_6,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
+        KC_ESC,  KC_0,    KC_1,    KC_2,    KC_3,    KC_0,    XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
         CW_TOGG, XXXXXXX, KC_7,    KC_8,    KC_9,    XXXXXXX, XXXXXXX, KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, KC_MINS, _______, _______, _______, _______, _______, _______
     ),
 
     [FUN] = LAYOUT_planck_grid(
-        KC_TAB,  KC_F10,  KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
-        KC_ESC,  KC_F11,  KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
+        KC_TAB,  KC_F10,  KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
+        KC_ESC,  KC_F11,  KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
         CW_TOGG, KC_F12,  KC_F7,   KC_F8,   KC_F9,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [NAV] = LAYOUT_planck_grid(
         KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, KC_PGUP, KC_BTAB, KC_UP,   KC_TAB,  KC_INS,  KC_DEL,
-        KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, KC_PSCR,
+        KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,  KC_PSCR,
         CW_TOGG, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX, KC_END,  XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, KC_ENT,  _______, KC_ESC,  _______, _______, _______
     ),
 
     [SYM] = LAYOUT_planck_grid(
-        KC_TAB,  XXXXXXX, KC_LABK, KC_RABK, KC_HASH, XXXXXXX, KC_CIRC, KC_PIPE, KC_LBRC, KC_RBRC, XXXXXXX, KC_BSPC,
+        KC_TAB,  XXXXXXX, KC_LABK, KC_RABK, KC_HASH, KC_DDS,  KC_CIRC, KC_PIPE, KC_LBRC, KC_RBRC, XXXXXXX, KC_BSPC,
         KC_ESC,  MT_EXLM, MT_MINS, MT_PLUS, MT_EQL,  KC_PERC, KC_GRV,  MT_AMPR, MT_LPRN, MT_RPRN, MT_QUES, XXXXXXX,
-        CW_TOGG, XXXXXXX, KC_SLSH, KC_ASTR, KC_BSLS, KC_AT,   KC_TILD, KC_DLR,  KC_LCBR, KC_RCBR, XXXXXXX, KC_ENT,
+        CW_TOGG, XXXXXXX, KC_SLSH, KC_ASTR, KC_AT,   KC_BSLS, KC_TILD, KC_DLR,  KC_LCBR, KC_RCBR, XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -172,6 +175,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     uint16_t kc = KC_NO;
     switch (keycode) {
+        case KC_DDS:
+            if (record->event.pressed) {
+                uint8_t mods = get_mods();
+                clear_mods();
+                SEND_STRING("../");
+                set_mods(mods);
+            }
+            break;
+
+        case MT_T:
+        case MT_F:
+        case MT_N:
+        case MT_J:
+            // Enable caps word if both mod shift keys are pressed
+            if (record->event.pressed && !record->tap.count && get_mods() & MOD_MASK_SHIFT) {
+                caps_word_on();
+                return false;
+            }
+            break;
+
         case MT_EXLM:
             kc = KC_EXLM;
             break;
