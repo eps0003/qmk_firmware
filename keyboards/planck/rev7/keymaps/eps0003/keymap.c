@@ -4,7 +4,7 @@
 #include "oneshot.h"
 
 // Layers
-#define LA_QWE TG(QWE)
+#define LA_COL TG(COL)
 #define LA_NUM MO(NUM)
 #define LA_NAV MO(NAV)
 #define LA_FUN MO(FUN)
@@ -52,7 +52,7 @@
 #define TAB_PRV C(KC_PGUP)
 #define TAB_1 C(KC_1)
 
-enum layers { COL, QWE, NUM, FUN, NAV, SYM };
+enum layers { QWE, COL, NUM, FUN, NAV, SYM };
 
 enum keycodes {
     // Custom oneshot mod implementation with no timers.
@@ -75,17 +75,17 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
+    [QWE] = LAYOUT_planck_grid(
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+        KC_ESC,  MT_A,    MT_S2,   MT_D,    MT_F,    KC_G,    KC_H,    MT_J,    MT_K,    MT_L,    MT_SCL,  KC_QUOT,
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
+        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  LA_NAV,  LA_COL,  XXXXXXX
+    ),
+
     [COL] = LAYOUT_planck_grid(
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
         KC_ESC,  MT_A,    MT_R,    MT_S,    MT_T,    KC_G,    KC_M,    MT_N,    MT_E,    MT_I,    MT_O,    KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  LA_NAV,  LA_QWE,  XXXXXXX
-    ),
-
-    [QWE] = LAYOUT_planck_grid(
-        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
-        _______, MT_A,    MT_S2,   MT_D,    MT_F,    KC_G,    KC_H,    MT_J,    MT_K,    MT_L,    MT_SCL,  KC_QUOT,
-        _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
