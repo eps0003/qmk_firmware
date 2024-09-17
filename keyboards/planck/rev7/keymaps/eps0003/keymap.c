@@ -8,6 +8,7 @@
 #define LA_NUM MO(NUM)
 #define LA_NAV MO(NAV)
 #define LA_FUN MO(FUN)
+#define LA_MSE MO(MSE)
 
 // Colemak-DH Mod-Tap keys
 #define MT_A LGUI_T(KC_A)
@@ -52,7 +53,7 @@
 #define TAB_PRV C(KC_PGUP)
 #define TAB_1 C(KC_1)
 
-enum layers { QWE, COL, NUM, FUN, NAV, SYM };
+enum layers { QWE, COL, NUM, FUN, NAV, MSE, SYM };
 
 enum keycodes {
     // Custom oneshot mod implementation with no timers.
@@ -79,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  MT_A,    MT_S2,   MT_D,    MT_F,    KC_G,    KC_H,    MT_J,    MT_K,    MT_L,    MT_SCL,  KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-        KC_LCTL, KC_LCMD, KC_LALT, QK_REP,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  LA_NAV,  LA_COL,  XXXXXXX
+        KC_LCTL, KC_LCMD, KC_LALT, LA_MSE,  LA_NAV,  KC_SPC,  KC_BSPC, LA_NUM,  LA_FUN,  LA_NAV,  LA_COL,  XXXXXXX
     ),
 
     [COL] = LAYOUT_planck_grid(
@@ -108,6 +109,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,  KC_PSCR,
         CW_TOGG, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_HOME, XXXXXXX, KC_END,  XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, KC_ENT,  _______, KC_ESC,  _______, _______, _______
+    ),
+
+    [MSE] = LAYOUT_planck_grid(
+        KC_TAB,  QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_U, KC_MS_U, SCR_TOP, XXXXXXX, KC_DEL,
+        KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_BTN4, KC_MS_L, KC_MS_D, KC_MS_R, KC_BTN5, XXXXXXX,
+        CW_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_D, XXXXXXX, SCR_BOT, SCR_BOT, KC_ENT,
+        _______, _______, _______, _______, _______, KC_BTN3, KC_BTN1, KC_BTN2, KC_BTN3, _______, _______, _______
     ),
 
     [SYM] = LAYOUT_planck_grid(
