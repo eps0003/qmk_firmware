@@ -100,28 +100,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [FUN] = LAYOUT_planck_grid(
         KC_TAB,  KC_F10,  KC_F4,   KC_F5,   KC_F6,   KC_F10,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, KC_BSPC,
         KC_ESC,  KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F11,  XXXXXXX, OS_SHFT, OS_CTRL, OS_ALT,  OS_CMD,  XXXXXXX,
-        CW_TOGG, KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+        KC_CAPS, KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [NAV] = LAYOUT_planck_grid(
         KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, XXXXXXX, KC_PGUP, KC_UP,   KC_TAB,  KC_INS,  KC_DEL,
         KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,  KC_PSCR,
-        CW_TOGG, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+        KC_LSFT, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, XXXXXXX, KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, KC_ENT,  _______, KC_ESC,  _______, _______, _______
     ),
 
     [MSE] = LAYOUT_planck_grid(
         KC_TAB,  QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_U, KC_MS_U, SCR_TOP, XXXXXXX, KC_DEL,
         KC_ESC,  OS_CMD,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_BTN4, KC_MS_L, KC_MS_D, KC_MS_R, KC_BTN5, XXXXXXX,
-        CW_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_D, XXXXXXX, SCR_BOT, SCR_BOT, KC_ENT,
+        KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_D, XXXXXXX, SCR_BOT, SCR_BOT, KC_ENT,
         _______, _______, _______, _______, _______, KC_BTN3, KC_BTN1, KC_BTN2, KC_BTN3, _______, _______, _______
     ),
 
     [SYM] = LAYOUT_planck_grid(
         KC_TAB,  XXXXXXX, KC_LABK, KC_RABK, KC_HASH, KC_DDS,  KC_CIRC, KC_PIPE, KC_LBRC, KC_RBRC, XXXXXXX, KC_BSPC,
         KC_ESC,  MT_EXLM, MT_MINS, MT_PLUS, MT_EQL,  KC_PERC, KC_GRV,  MT_AMPR, MT_LPRN, MT_RPRN, MT_QUES, XXXXXXX,
-        CW_TOGG, KC_DDS,  KC_SLSH, KC_ASTR, KC_AT,   KC_BSLS, KC_TILD, KC_DLR,  KC_LCBR, KC_RCBR, KC_CIRC, KC_ENT,
+        KC_LSFT, KC_DDS,  KC_SLSH, KC_ASTR, KC_AT,   KC_BSLS, KC_TILD, KC_DLR,  KC_LCBR, KC_RCBR, KC_CIRC, KC_ENT,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -221,6 +221,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MT_QUES:
             kc = KC_QUES;
             break;
+
+        case KC_ESC:
+            // Disable caps lock if enabled
+            if (record->event.pressed && host_keyboard_led_state().caps_lock) {
+                tap_code(KC_CAPS);
+                return false;
+            }
+            break;
     }
 
     if (record->tap.count && kc) {
@@ -262,4 +270,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
 
     return update_tri_layer_state(state, NAV, NUM, SYM);
+}
+
+void caps_word_set_user(bool active) {
+    if (active && host_keyboard_led_state().caps_lock) {
+        tap_code(KC_CAPS);
+    }
 }
