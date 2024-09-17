@@ -253,11 +253,18 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    // Disable permissive hold for pinkie Mod-Tap keys to prevent accidental
+    // triggers. Pinkies tend to stay pressed for longer due to their reduced
+    // dexterity, enabling another key to be pressed and released within the
+    // tapping term. For example, trying to type the common bigram 'al' on
+    // QWERTY with permissive hold frequently triggers LGUI+L which locks the
+    // computer. >:(
     switch (keycode) {
-        case MT_A:
-        case MT_O:
-        case MT_EXLM:
-        case MT_QUES:
+        case MT_A:    // QWE/COL layers
+        case MT_SCL:  // QWE layer
+        case MT_O:    // COL layer
+        case MT_EXLM: // SYM layer
+        case MT_QUES: // SYM layer
             return false;
         default:
             return true;
