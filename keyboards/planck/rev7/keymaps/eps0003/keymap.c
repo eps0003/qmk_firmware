@@ -257,5 +257,9 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+    if (IS_LAYER_ON_STATE(state, NAV) || IS_LAYER_ON_STATE(state, MSE)) {
+        caps_word_off();
+    }
+
     return update_tri_layer_state(state, NAV, NUM, SYM);
 }
