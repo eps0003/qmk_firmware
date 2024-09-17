@@ -241,7 +241,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         col = MATRIX_COLS - col - 1;
     }
 
-    return TAPPING_TERM + MAX(0, 25 * (col - 2));
+    return TAPPING_TERM + MAX(0, 20 * (col - 2));
 }
 
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
