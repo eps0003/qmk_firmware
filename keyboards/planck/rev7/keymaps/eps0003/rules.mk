@@ -7,4 +7,5 @@ CONSOLE_ENABLE = yes
 AUDIO_ENABLE = no
 RGBLIGHT_ENABLE = no
 
-SRC += oneshot.c
+SRC += features/achordion.c
+SRC += features/oneshot.c

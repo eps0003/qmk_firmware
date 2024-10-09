@@ -1,7 +1,9 @@
 #include QMK_KEYBOARD_H
 
 #include "print.h"
-#include "oneshot.h"
+
+#include "features/achordion.h"
+#include "features/oneshot.h"
 
 // Layers
 #define LA_COL TG(COL)
@@ -176,6 +178,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
 
+    if (!process_achordion(keycode, record)) {
+        return false;
+    }
+
     update_oneshot(&os_shft_state, KC_LSFT, OS_SHFT, keycode, record);
     update_oneshot(&os_ctrl_state, KC_LCTL, OS_CTRL, keycode, record);
     update_oneshot(&os_alt_state, KC_LALT, OS_ALT, keycode, record);
@@ -241,6 +247,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     return true;
+}
+
+bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, uint16_t other_keycode, keyrecord_t *other_record) {
+    return true;
+
+    // // Consider these chords as holds, even though they are on the same hand
+    // switch (tap_hold_keycode) {
+    //     case MT_D: // Left ctrl (QWERTY)
+    //     case MT_S: // Left ctrl (Colemak)
+    //         switch (other_keycode) {
+    //             case KC_Z: // Undo
+    //             case KC_X: // Cut
+    //             case KC_C: // Copy
+    //             case KC_V: // Paste
+    //                 return true;
+    //         }
+    //         break;
+    // }
+
+    // // Also allow same-hand holds when the other key is in the bottom row
+    // if (other_record->event.key.row % (MATRIX_ROWS / 2) == 3) {
+    //     return true;
+    // }
+
+    // // Otherwise, follow the opposite hands rule
+    // return achordion_opposite_hands(tap_hold_record, other_record);
+}
+
+void matrix_scan_user(void) {
+    achordion_task();
 }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
