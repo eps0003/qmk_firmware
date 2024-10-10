@@ -12,7 +12,7 @@
 #define LA_FUN MO(FUN)
 #define LA_MSE MO(MSE)
 
-// Colemak-DH Mod-Tap keys
+// Colemak-DH mod-tap keys
 #define MT_A LGUI_T(KC_A)
 #define MT_R LALT_T(KC_R)
 #define MT_S LCTL_T(KC_S)
@@ -23,7 +23,7 @@
 #define MT_I RALT_T(KC_I)
 #define MT_O RGUI_T(KC_O)
 
-// QWERTY Mod-Tap keys
+// QWERTY mod-tap keys
 #define MT_A LGUI_T(KC_A)
 #define MT_S2 LALT_T(KC_S)
 #define MT_D LCTL_T(KC_D)
@@ -34,7 +34,7 @@
 #define MT_L RALT_T(KC_L)
 #define MT_SCL RGUI_T(KC_SCLN)
 
-// Symbols Mod-Tap keys
+// Symbols mod-tap keys
 #define MT_EXLM LGUI_T(KC_EXLM)
 #define MT_MINS LALT_T(KC_MINS)
 #define MT_PLUS LCTL_T(KC_PLUS)
@@ -250,29 +250,38 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, uint16_t other_keycode, keyrecord_t *other_record) {
-    return true;
+    // Consider these chords as holds, even though they are on the same hand
+    switch (tap_hold_keycode) {
+        case MT_D: // Left ctrl (QWERTY)
+        case MT_S: // Left ctrl (Colemak)
+            switch (other_keycode) {
+                case KC_Z: // Undo
+                case KC_X: // Cut
+                case KC_C: // Copy
+                case KC_V: // Paste
+                    return true;
+            }
+            break;
+    }
 
-    // // Consider these chords as holds, even though they are on the same hand
-    // switch (tap_hold_keycode) {
-    //     case MT_D: // Left ctrl (QWERTY)
-    //     case MT_S: // Left ctrl (Colemak)
-    //         switch (other_keycode) {
-    //             case KC_Z: // Undo
-    //             case KC_X: // Cut
-    //             case KC_C: // Copy
-    //             case KC_V: // Paste
-    //                 return true;
-    //         }
-    //         break;
-    // }
+    // Also allow same-hand holds when the other key is in the bottom row
+    if (other_record->event.key.row % (MATRIX_ROWS / 2) == 3) {
+        return true;
+    }
 
-    // // Also allow same-hand holds when the other key is in the bottom row
-    // if (other_record->event.key.row % (MATRIX_ROWS / 2) == 3) {
-    //     return true;
-    // }
+    // Otherwise, follow the opposite hands rule
+    return achordion_opposite_hands(tap_hold_record, other_record);
+}
 
-    // // Otherwise, follow the opposite hands rule
-    // return achordion_opposite_hands(tap_hold_record, other_record);
+uint16_t achordion_streak_chord_timeout(uint16_t tap_hold_keycode, uint16_t next_keycode) {
+    // No timeout for shift mod-tap
+    uint8_t mod = mod_config(QK_MOD_TAP_GET_MODS(tap_hold_keycode));
+    if ((mod & MOD_LSFT) != 0) {
+        return 0;
+    }
+
+    // Default timeout
+    return 200;
 }
 
 void matrix_scan_user(void) {
@@ -289,7 +298,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
-    // Disable permissive hold for pinkie Mod-Tap keys to prevent accidental
+    // Disable permissive hold for pinkie mod-tap keys to prevent accidental
     // triggers. Pinkies tend to stay pressed for longer due to their reduced
     // dexterity, enabling another key to be pressed and released within the
     // tapping term. For example, trying to type the common bigram 'al' on
