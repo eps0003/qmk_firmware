@@ -1,9 +1,5 @@
 #pragma once
 
-#define NO_DEBUG
-#define USER_PRINT
-#define NO_ACTION_ONESHOT
-
 #define TAPPING_TERM 175
 #define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD_PER_KEY
@@ -17,7 +13,6 @@
 #define MOUSEKEY_TIME_TO_MAX 36
 #define MOUSEKEY_FRICTION 70
 
-#define RGBLIGHT_DISABLE_KEYCODES
 #define RGBLIGHT_DEFAULT_ON false
 
 #define ACHORDION_STREAK
