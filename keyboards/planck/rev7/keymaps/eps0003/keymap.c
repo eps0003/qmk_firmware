@@ -275,8 +275,8 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, ui
 }
 
 uint16_t achordion_streak_chord_timeout(uint16_t tap_hold_keycode, uint16_t next_keycode) {
-    // No timeout for shift mod-tap keys
-    if (QK_MOD_TAP_GET_MODS(tap_hold_keycode) & MOD_LSFT) {
+    // No timeout for shift and ctrl mod-tap keys
+    if (QK_MOD_TAP_GET_MODS(tap_hold_keycode) & (MOD_LSFT | MOD_LCTL)) {
         return 0;
     }
 
