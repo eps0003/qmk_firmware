@@ -77,18 +77,6 @@ enum keycodes {
     KC_DDS = SAFE_RANGE, // KC_DOT_DOT_SLASH
 };
 
-/* =================================== */
-/* ========== KEY OVERRIDES ========== */
-/* =================================== */
-
-const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
-
-/* clang-format off */
-const key_override_t *key_overrides[] = {
-    &delete_key_override,
-};
-/* clang-format on */
-
 /* ============================ */
 /* ========== KEYMAP ========== */
 /* ============================ */
