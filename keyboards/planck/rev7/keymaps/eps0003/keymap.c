@@ -113,9 +113,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [NAV] = LAYOUT_planck_grid(
-        KC_TAB,  QK_BOOT, XXXXXXX, KC_BTN4, KC_BTN5, XXXXXXX, XXXXXXX, KC_BTAB, KC_UP,   KC_TAB,  KC_INS,  KC_DEL,
-        KC_ESC,  OS_GUI,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, KC_PSCR,
-        KC_LSFT, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, KC_PGDN, KC_HOME, KC_END,  KC_END,  XXXXXXX, KC_ENT,
+        KC_TAB,  QK_BOOT, KC_INS,  KC_BTN4, KC_BTN5, XXXXXXX, XXXXXXX, KC_BTAB, KC_UP,   KC_TAB,  XXXXXXX, KC_DEL,
+        KC_ESC,  OS_GUI,  OS_ALT,  OS_CTRL, OS_SHFT, XXXXXXX, KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,  KC_PSCR,
+        KC_LSFT, XXXXXXX, TAB_1,   TAB_PRV, TAB_NXT, XXXXXXX, KC_PGDN, KC_HOME, KC_WH_D, KC_WH_U, XXXXXXX, KC_ENT,
         _______, _______, _______, _______, _______, _______, KC_ENT,  _______, _______, _______, _______, _______
     ),
 
